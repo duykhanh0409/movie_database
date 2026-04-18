@@ -1,10 +1,10 @@
 import { StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 
-export default function HomeScreen() {
+export default function WatchlistScreen() {
   return (
     <View style={styles.container}>
-      <ThemedText type="title">Movies</ThemedText>
+      <ThemedText type="title">Watchlist</ThemedText>
     </View>
   );
 }
