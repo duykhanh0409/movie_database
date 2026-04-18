@@ -1,15 +1,13 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { mmkvStorage } from '@/services/storage';
-import { Category, SortOption, SortOrder } from '@/shared/types/api';
+import { Category, SortOption } from '@/shared/types/api';
 
 interface PreferencesState {
   category: Category;
   sortBy: SortOption | '';
-  sortOrder: SortOrder;
   setCategory: (c: Category) => void;
   setSortBy: (s: SortOption | '') => void;
-  toggleSortOrder: () => void;
 }
 
 export const usePreferencesStore = create<PreferencesState>()(
@@ -17,13 +15,8 @@ export const usePreferencesStore = create<PreferencesState>()(
     (set) => ({
       category: 'now_playing',
       sortBy: '',
-      sortOrder: 'desc',
       setCategory: (category) => set({ category }),
       setSortBy: (sortBy) => set({ sortBy }),
-      toggleSortOrder: () =>
-        set((state) => ({
-          sortOrder: state.sortOrder === 'asc' ? 'desc' : 'asc',
-        })),
     }),
     {
       name: 'preferences-storage',

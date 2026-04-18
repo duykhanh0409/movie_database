@@ -90,9 +90,7 @@ const styles = StyleSheet.create({
   optionUnselected: {
     backgroundColor: '#F7F7F7',
   },
-  optionText: {
-    // common styles if any
-  },
+  optionText: {},
   optionTextSelected: {
     fontWeight: '400',
     fontSize: 14,

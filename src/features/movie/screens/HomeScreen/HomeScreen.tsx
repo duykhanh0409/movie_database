@@ -53,7 +53,6 @@ export default function HomeScreen() {
 
   const movies = data?.pages.flatMap((page) => page.results.map(mapMovieDTO)) || [];
 
-  // Apply sorting locally
   const sortedMovies = [...movies].sort((a, b) => {
     if (sortBy === 'alphabetical') {
       return a.title.localeCompare(b.title);

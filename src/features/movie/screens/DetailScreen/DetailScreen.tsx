@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useMovieDetails } from '@/features/movie/hooks/useMovieDetails';
 import { useMovieCredits } from '@/features/movie/hooks/useMovieCredits';
 import { ErrorState } from '@/shared/components/ErrorState';
+import { EmptyState } from '@/shared/components/EmptyState';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { formatRuntime } from '@/shared/utils/formatRuntime';
@@ -64,7 +65,16 @@ export default function DetailScreen() {
     );
   }
 
-  if (!movie) return null;
+  if (!movie) {
+    return (
+      <View style={styles.centerContainer}>
+        <EmptyState
+          title="Movie not found"
+          subtitle="Unable to load movie details. Please try again."
+        />
+      </View>
+    );
+  }
 
   const year = movie.releaseDate ? movie.releaseDate.split('-')[0] : '';
   const director = credits?.crew.find((c) => c.job === 'Director');
@@ -97,7 +107,7 @@ export default function DetailScreen() {
 
           <View style={styles.topInfo}>
           <Image 
-            source={{ uri: movie.posterUrl || 'https://via.placeholder.com/300x450' }} 
+            source={{ uri: movie.posterUrl || undefined }} 
             style={styles.poster}
             contentFit="cover"
             transition={300}
@@ -157,7 +167,7 @@ export default function DetailScreen() {
       </View>
 
       <View style={styles.castSection}>
-        {credits?.cast && <CastCarousel cast={credits.cast} />}
+        {credits?.cast && credits.cast.length > 0 && <CastCarousel cast={credits.cast} />}
       </View>
     </ScrollView>
     </View>

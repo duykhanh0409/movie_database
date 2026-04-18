@@ -11,7 +11,7 @@ export function CastCarousel({ cast }: CastCarouselProps) {
   const renderItem: ListRenderItem<Cast> = ({ item }) => (
     <View style={styles.card}>
       <Image
-        source={{ uri: item.profileUrl || 'https://via.placeholder.com/150x225?text=No+Image' }}
+        source={{ uri: item.profileUrl || undefined }}
         style={styles.image}
         contentFit="cover"
         transition={300}
