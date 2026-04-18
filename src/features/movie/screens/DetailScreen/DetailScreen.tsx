@@ -23,8 +23,8 @@ export default function DetailScreen() {
   const { data: movie, isLoading: isLoadingDetails, error: detailsError, refetch: refetchDetails } = useMovieDetails(movieId);
   const { data: credits, isLoading: isLoadingCredits, error: creditsError, refetch: refetchCredits } = useMovieCredits(movieId);
 
-  const { isInWatchlist, addMovie, removeMovie } = useWatchlistStore();
-  const isWatchlisted = isInWatchlist(movieId);
+  const { items, addMovie, removeMovie } = useWatchlistStore();
+  const isWatchlisted = items.some((m) => m.id === movieId);
 
   const handleWatchlistToggle = () => {
     if (!movie) return;
