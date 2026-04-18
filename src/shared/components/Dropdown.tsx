@@ -1,6 +1,6 @@
+import { IconSymbol } from '@/shared/components/ui/icon-symbol';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { IconSymbol } from '@/shared/components/ui/icon-symbol';
 
 export interface DropdownOption {
   label: string;
@@ -19,13 +19,13 @@ export function Dropdown({ label, options, selectedValue, onSelect }: DropdownPr
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
-        style={styles.header} 
-        onPress={() => setExpanded(!expanded)} 
+      <TouchableOpacity
+        style={styles.header}
+        onPress={() => setExpanded(!expanded)}
         activeOpacity={0.7}
       >
         <Text style={styles.headerText}>{label}</Text>
-        <IconSymbol name={expanded ? "chevron.up" : "chevron.down"} size={28} color="#000" />
+        <IconSymbol name={expanded ? "chevron.down" : "chevron.right"} size={28} color="#000" />
       </TouchableOpacity>
 
       {expanded && (

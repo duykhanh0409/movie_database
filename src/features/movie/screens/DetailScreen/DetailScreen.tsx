@@ -1,20 +1,20 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useMovieDetails } from '@/features/movie/hooks/useMovieDetails';
-import { useMovieCredits } from '@/features/movie/hooks/useMovieCredits';
-import { ErrorState } from '@/shared/components/ErrorState';
-import { EmptyState } from '@/shared/components/EmptyState';
-import { Image } from 'expo-image';
-import { Ionicons } from '@expo/vector-icons';
-import { formatRuntime } from '@/shared/utils/formatRuntime';
-import { ScoreIndicator } from '@/shared/components/ScoreIndicator';
 import { CastCarousel } from '@/features/movie/components/CastCarousel';
+import { useMovieCredits } from '@/features/movie/hooks/useMovieCredits';
+import { useMovieDetails } from '@/features/movie/hooks/useMovieDetails';
 import { useWatchlistStore } from '@/features/watchlist/store/useWatchlistStore';
+import { EmptyState } from '@/shared/components/EmptyState';
+import { ErrorState } from '@/shared/components/ErrorState';
+import { ScoreIndicator } from '@/shared/components/ScoreIndicator';
+import { formatRuntime } from '@/shared/utils/formatRuntime';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { Image } from 'expo-image';
+import React from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useRoute, RouteProp } from '@react-navigation/native';
 import { HomeStackParamList, Screens } from '@/app/navigation/types';
+import { RouteProp, useRoute } from '@react-navigation/native';
 
 export default function DetailScreen() {
   const navigation = useNavigation();
@@ -55,12 +55,12 @@ export default function DetailScreen() {
 
   if (detailsError || creditsError) {
     return (
-      <ErrorState 
-        error={detailsError as Error || creditsError as Error} 
+      <ErrorState
+        error={detailsError as Error || creditsError as Error}
         onRetry={() => {
           refetchDetails();
           refetchCredits();
-        }} 
+        }}
       />
     );
   }
@@ -93,83 +93,85 @@ export default function DetailScreen() {
       </SafeAreaView>
       <ScrollView style={styles.container} bounces={false}>
         <View style={styles.headerBackground}>
-          <View style={styles.navBar}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-              <Ionicons name="chevron-back" size={28} color="#fff" />
-            </TouchableOpacity>
-            <View style={styles.titleContainer}>
-              <Text style={styles.titleText} numberOfLines={1}>
-                {movie.title} <Text style={styles.yearText}>({year})</Text>
-              </Text>
+          <View style={styles.headerOverlay}>
+            <View style={styles.navBar}>
+              <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                <Ionicons name="chevron-back" size={28} color="#fff" />
+              </TouchableOpacity>
+              <View style={styles.titleContainer}>
+                <Text style={styles.titleText} numberOfLines={1}>
+                  {movie.title} <Text style={styles.yearText}>({year})</Text>
+                </Text>
+              </View>
+              <View style={{ width: 44 }} />
             </View>
-            <View style={{ width: 44 }} />
+
+            <View style={styles.topInfo}>
+              <Image
+                source={{ uri: movie.posterUrl || undefined }}
+                style={styles.poster}
+                contentFit="cover"
+                transition={300}
+              />
+              <View style={styles.metaData}>
+                {movie.rating && (
+                  <View style={styles.ratingBadge}>
+                    <Text style={styles.ratingText}>{movie.rating}</Text>
+                  </View>
+                )}
+                <Text style={styles.metaText}>
+                  {movie.releaseDate} • {formatRuntime(movie.runtime)}
+                </Text>
+                <Text style={styles.metaText}>{movie.genres.map(g => g.name).join(', ')}</Text>
+                <Text style={styles.metaText}><Text style={styles.boldText}>Status:</Text> {movie.status}</Text>
+                <Text style={styles.metaText}><Text style={styles.boldText}>Original Language:</Text> {movie.originalLanguage === 'en' ? 'English' : movie.originalLanguage}</Text>
+              </View>
+            </View>
           </View>
 
-          <View style={styles.topInfo}>
-          <Image 
-            source={{ uri: movie.posterUrl || undefined }} 
-            style={styles.poster}
-            contentFit="cover"
-            transition={300}
-          />
-          <View style={styles.metaData}>
-            {movie.rating && (
-              <View style={styles.ratingBadge}>
-                <Text style={styles.ratingText}>{movie.rating}</Text>
-              </View>
-            )}
-            <Text style={styles.metaText}>
-              {movie.releaseDate} • {formatRuntime(movie.runtime)}
-            </Text>
-            <Text style={styles.metaText}>{movie.genres.map(g => g.name).join(', ')}</Text>
-            <Text style={styles.metaText}><Text style={styles.boldText}>Status:</Text> {movie.status}</Text>
-            <Text style={styles.metaText}><Text style={styles.boldText}>Original Language:</Text> {movie.originalLanguage === 'en' ? 'English' : movie.originalLanguage}</Text>
+          <View style={styles.midInfo}>
+            <View style={styles.scoreRow}>
+              <ScoreIndicator score={movie.voteAverage} size={60} />
+              <Text style={styles.scoreLabel}>User Score</Text>
+            </View>
+
+            <View style={styles.crewGrid}>
+              {director && (
+                <View style={styles.crewItem}>
+                  <Text style={styles.crewName}>{director.name}</Text>
+                  <Text style={styles.crewJob}>{director.job}</Text>
+                </View>
+              )}
+              {writers?.map(writer => (
+                <View style={styles.crewItem} key={`${writer.id}-${writer.job}`}>
+                  <Text style={styles.crewName}>{writer.name}</Text>
+                  <Text style={styles.crewJob}>{writer.job}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.bottomInfo}>
+            {movie.tagline ? <Text style={styles.tagline}>{movie.tagline}</Text> : null}
+            <Text style={styles.overviewTitle}>Overview</Text>
+            <Text style={styles.overviewText}>{movie.overview}</Text>
+
+            <TouchableOpacity
+              style={styles.watchlistButton}
+              onPress={handleWatchlistToggle}
+            >
+              <Ionicons name="bookmark" size={20} color="#fff" style={styles.watchlistIcon} />
+              <Text style={styles.watchlistButtonText}>
+                {isWatchlisted ? 'Remove from Watchlist' : 'Add To Watchlist'}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
 
-        <View style={styles.midInfo}>
-          <View style={styles.scoreRow}>
-            <ScoreIndicator score={movie.voteAverage} size={60} />
-            <Text style={styles.scoreLabel}>User Score</Text>
-          </View>
-          
-          <View style={styles.crewGrid}>
-            {director && (
-              <View style={styles.crewItem}>
-                <Text style={styles.crewName}>{director.name}</Text>
-                <Text style={styles.crewJob}>{director.job}</Text>
-              </View>
-            )}
-            {writers?.map(writer => (
-              <View style={styles.crewItem} key={`${writer.id}-${writer.job}`}>
-                <Text style={styles.crewName}>{writer.name}</Text>
-                <Text style={styles.crewJob}>{writer.job}</Text>
-              </View>
-            ))}
-          </View>
+        <View style={styles.castSection}>
+          {credits?.cast && credits.cast.length > 0 && <CastCarousel cast={credits.cast} />}
         </View>
-
-        <View style={styles.bottomInfo}>
-          {movie.tagline ? <Text style={styles.tagline}>{movie.tagline}</Text> : null}
-          <Text style={styles.overviewTitle}>Overview</Text>
-          <Text style={styles.overviewText}>{movie.overview}</Text>
-          
-          <TouchableOpacity 
-            style={styles.watchlistButton} 
-            onPress={handleWatchlistToggle}
-          >
-            <Ionicons name="bookmark" size={20} color="#fff" style={styles.watchlistIcon} />
-            <Text style={styles.watchlistButtonText}>
-              {isWatchlisted ? 'Remove from Watchlist' : 'Add To Watchlist'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.castSection}>
-        {credits?.cast && credits.cast.length > 0 && <CastCarousel cast={credits.cast} />}
-      </View>
-    </ScrollView>
+      </ScrollView>
     </View>
   );
 }
@@ -203,6 +205,10 @@ const styles = StyleSheet.create({
   headerBackground: {
     backgroundColor: '#01b4e4',
     paddingBottom: 24,
+  },
+  headerOverlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    paddingBottom: 20,
   },
   navBar: {
     flexDirection: 'row',
