@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text, FlatList, ActivityIndicator } from 'react-native';
 import { Image } from 'expo-image';
+import React, { useState } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 
-import { usePreferencesStore } from '@/app/store/usePreferencesStore';
 import { useMovies } from '@/features/movie/hooks/useMovies';
 import { mapMovieDTO } from '@/features/movie/model/movie.mapper';
+import { usePreferencesStore } from '@/features/movie/store/usePreferencesStore';
 
 import { Dropdown } from '@/shared/components/Dropdown';
-import { MovieCard } from '@/shared/components/MovieCard';
-import { ErrorState } from '@/shared/components/ErrorState';
 import { EmptyState } from '@/shared/components/EmptyState';
+import { ErrorState } from '@/shared/components/ErrorState';
+import { MovieCard } from '@/shared/components/MovieCard';
 import { Category, SortOption } from '@/shared/types/api';
 
 const CATEGORY_OPTIONS = [
@@ -26,9 +25,9 @@ const SORT_OPTIONS = [
   { label: 'By release date', value: 'release_date' },
 ];
 
+import { HomeStackParamList, Screens } from '@/app/navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParamList, Screens } from '@/app/navigation/types';
 
 export default function HomeScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>();

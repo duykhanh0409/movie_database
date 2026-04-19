@@ -97,8 +97,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   optionTextUnselected: {
-    fontWeight: '600',
-    fontSize: 16,
+    fontWeight: '400',
+    fontSize: 14,
     color: '#000000',
   },
 });
